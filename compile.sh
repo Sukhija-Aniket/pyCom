@@ -23,8 +23,8 @@ if [[ "$arg" == "$var1" ]]; then
 	
 elif [[ "$arg" == "$var2" ]]; then
 	echo "removing files"
-    rm parser.out
-    rm parsetab.py
+    rm -rf parser.out
+    rm -rf parsetab.py
 	rm -rf $output_dir
 
 else

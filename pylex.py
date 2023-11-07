@@ -6,17 +6,20 @@ class MyLexer(object):
 
         self.reserved = {
         'if': 'IF',
+        'elif': 'ELIF',
         'else' : 'ELSE',
         'then': 'THEN',
         'while' : 'WHILE',
         'boolean' : 'BOOLEAN',
-        'package' : 'PACKAGE',
         'import' : 'IMPORT',
+        'from' : 'FROM',
+        'as' : 'AS',
         'class' : 'CLASS',
         'interface' : 'INTERFACE',
         'extends' : 'EXTENDS',
         'true' : 'TRUE',
         'false' : 'FALSE',
+        'in': 'IN',
         'int' : 'INT',
         'float' : 'FLOAT',
         'main' : 'MAIN',
@@ -26,7 +29,7 @@ class MyLexer(object):
         'static': 'STATIC',
         'string': 'STRING',
         'this': 'THIS',
-        'System.out.println': 'PRINT',
+        'print': 'PRINT',
         'void': 'VOID',
         'Object': 'OBJECT' 
         }
@@ -34,11 +37,15 @@ class MyLexer(object):
         self.tokens = [
             'INTEGER_LITERAL',
             'IDENTIFIER',
+            'COMMENT',
+            'MULTILINE_COMMENT',
             'LE',
             'GE',
+            'ARROW',
             'NE',
             'AND',
             'OR',
+            'XOR',
             'PLUS',
             'MINUS',
             'MULT',
@@ -61,6 +68,8 @@ class MyLexer(object):
             'GREATER',
             'BITOR',
             'BITAND',
+            'EXCLAMATION_MARK',
+            'TILDE',
             'NOT',
             'QUESTION',
             'DOLLAR',
@@ -71,9 +80,12 @@ class MyLexer(object):
 
         self.t_LE = r'<='
         self.t_GE = r'>='
+        self.t_ARROW = r'->'
         self.t_NE = r'!='
-        self.t_AND = r'&&'
-        self.t_OR = r'\|\|'
+        self.t_AND = r'and'
+        self.t_OR = r'OR'
+        self.t_XOR = r'\^'
+        self.t_NOT = r'NOT'
         self.t_PLUS = r'\+'
         self.t_MINUS = r'-'
         self.t_MULT = r'\*'
@@ -96,7 +108,8 @@ class MyLexer(object):
         self.t_GREATER = r'>'
         self.t_BITOR = r'\|'
         self.t_BITAND = r'&'
-        self.t_NOT = r'!'
+        self.t_EXCLAMATION_MARK = r'!'
+        self.t_TILDE = r'~'
         self.t_QUESTION = r'\?'
         self.t_DOLLAR = r'\$'
         self.t_SLASH = r'\\'
@@ -114,9 +127,13 @@ class MyLexer(object):
         return t
 
     def t_COMMENT(self, t):
-        r'\/\/.*'
-        pass
+        r'\#.*'
+        t.lexer.lineno += t.value.count('\n')
         # No return value. Token discarded
+
+    def t_MULTILINE_COMMENT(self, t):
+        r"'''\s*.*?\s*'''"
+        t.lexer.lineno += t.value.count('\n')
 
     def t_FLOAT_LITERAL(self, t):
         r'\d+\.\d+'
@@ -149,20 +166,16 @@ class MyLexer(object):
             print(tok)
             print(tok.type, tok.value, tok.lineno, tok.lexpos)
 
-# lexer = lex.lex()
+'''To use Lexer Independently, uncomment the below code'''
+# mylexer = MyLexer()
+# lexer = mylexer.build()
 
-data = '''
-class ABC {
-    
-    public static void main(int a, int b) {
-        System.out.println("Some Random Function");
-    }
-}
-'''
+# with open('testcases_input/c.py', 'r') as file:
+#     data = file.read() 
 
 # lexer.input(data)
 
-# #Tokenize
+# # Tokenize
 # while True:
 #     tok = lexer.token()
 #     if not tok: 

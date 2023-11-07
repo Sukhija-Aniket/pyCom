@@ -1,8 +1,6 @@
 import sys
-from pyCom.pylex import MyLexer
-from pyCom.pyparse import MyParser
-
-
+from pylex import MyLexer
+from pyparse import MyParser
 
 data  = sys.stdin.read()
 myLexer = MyLexer()
